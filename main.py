@@ -1,4 +1,4 @@
-ERRO_SEM_PEÇA_LOCAL = "Não há peça da sua cor no local indicado.\n"
+ERRO_SEM_PECA_LOCAL = "Não há peça da sua cor no local indicado.\n"
 PRETAS = "pretas"
 BRANCAS = "brancas"
 TAMANHO_TABULEIRO = 8
@@ -121,6 +121,11 @@ def jogar():
 
         mover_cavalo()
 
+    elif tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == TORRE_B or \
+            tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == TORRE_P:
+
+        mover_torre()
+
     elif tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == REI_B or \
             tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == REI_P:
         mover_rei()
@@ -128,6 +133,10 @@ def jogar():
     elif tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == BISPO_B or \
             tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == BISPO_P:
         mover_bispo()
+
+    elif tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == RAINHA_B or \
+            tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] == RAINHA_P:
+        mover_rainha()
 
 def mover_peao():
     global posi_atual_p
@@ -193,6 +202,50 @@ def mover_cavalo():
                     else:
                         tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = CAVALO_P
 
+def mover_torre():
+    global posi_atual_p
+    global movimento_p
+    valido = False
+    cont = 0
+
+    if tabuleiro_cores[int(posi_atual_p[0])-1][coluna_referencia.index(posi_atual_p[1])] == turno and \
+            tabuleiro_cores[int(movimento_p[0])-1][coluna_referencia.index(movimento_p[1])] != turno:
+        if posi_atual_p[0] == movimento_p[0]:
+            if coluna_referencia.index(posi_atual_p[1]) > coluna_referencia.index(movimento_p[1]):
+                for i in range(coluna_referencia.index(movimento_p[1])+1, coluna_referencia.index(posi_atual_p[1])):
+                    if tabuleiro_cores[int(posi_atual_p[0])-1][i] == ESPACO:
+                        cont += 1
+            else:
+                for i in range(coluna_referencia.index(posi_atual_p[1]) + 1, coluna_referencia.index(movimento_p[1])):
+                    if tabuleiro_cores[int(posi_atual_p[0]) - 1][i] == ESPACO:
+                        cont += 1
+
+            if cont == abs(coluna_referencia.index(posi_atual_p[1]) - coluna_referencia.index(movimento_p[1]))-1:
+                valido = True
+
+        elif posi_atual_p[1] == movimento_p[1]:
+            if int(posi_atual_p[0]) > int(movimento_p[0]):
+                for i in range(int(movimento_p[0]), int(posi_atual_p[0])-1):
+                    if tabuleiro_cores[i][coluna_referencia.index(posi_atual_p[1])] == ESPACO:
+                        cont += 1
+            else:
+                for i in range(int(posi_atual_p[0]), int(movimento_p[0])-1):
+                    if tabuleiro_cores[i][coluna_referencia.index(posi_atual_p[1])] == ESPACO:
+                        cont += 1
+
+            if cont == abs(int(posi_atual_p[0]) - int(movimento_p[0]))-1:
+                valido = True
+
+        if valido:
+            tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+
+            tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+            tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+            if turno == BRANCAS:
+                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = TORRE_B
+            else:
+                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = TORRE_P
 
 def mover_rei():
     if tabuleiro_cores[int(movimento_p[0])-1][coluna_referencia.index(movimento_p[1])] != turno:
@@ -306,7 +359,141 @@ def mover_bispo():
                         else:
                             tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = BISPO_P
 
-#def mover_rainha():
+def mover_rainha():
+    cont = 0
+    if tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] != turno:
+        if int(posi_atual_p[0]) - 1 == int(movimento_p[0]) - 1 and coluna_referencia.index(posi_atual_p[1])!=coluna_referencia.index(movimento_p[1]):
+            if coluna_referencia.index(posi_atual_p[1])>coluna_referencia.index(movimento_p[1]):
+                for i in range (coluna_referencia.index(movimento_p[1]) + 1, coluna_referencia.index(posi_atual_p[1])):
+                    if tabuleiro_cores[int(movimento_p[0]) - 1][i] != ESPACO:
+                        cont += 1
+                if cont == 0:
+                    tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                    if turno == BRANCAS:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                    else:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+            elif coluna_referencia.index(posi_atual_p[1])<coluna_referencia.index(movimento_p[1]):
+                for i in range (coluna_referencia.index(posi_atual_p[1])+1, coluna_referencia.index(movimento_p[1]) ):
+                    if tabuleiro_cores[int(movimento_p[0]) - 1][i] != ESPACO:
+                        cont += 1
+                if cont == 0:
+                    tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                    if turno == BRANCAS:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                    else:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+        elif int(posi_atual_p[0]) - 1 != int(movimento_p[0]) - 1 and coluna_referencia.index(posi_atual_p[1]) == coluna_referencia.index(movimento_p[1]):
+            if int(posi_atual_p[0]) - 1 > int(movimento_p[0]) - 1:
+                for i in range (int(posi_atual_p[0])-2,int(movimento_p[0])-1,-1):
+                    if tabuleiro_cores[i][coluna_referencia.index(movimento_p[1])] != ESPACO:
+                        cont += 1
+                if cont == 0:
+                    tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                    if turno == BRANCAS:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                    else:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+            elif int(posi_atual_p[0]) - 1 < int(movimento_p[0]) - 1:
+                for i in range (int(posi_atual_p[0]),int(movimento_p[0])):
+                    if tabuleiro_cores[i][coluna_referencia.index(movimento_p[1])] != ESPACO:
+                        cont += 1
+                if cont == 0:
+                    tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                    tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                    if turno == BRANCAS:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                    else:
+                        tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+
+        else:
+            if int(posi_atual_p[0]) - 1 > int(movimento_p[0]) - 1:
+                if coluna_referencia.index(posi_atual_p[1]) > coluna_referencia.index(movimento_p[1]):
+                    x = (int(posi_atual_p[0]) - 1) - (int(movimento_p[0]) - 1)
+                    v = int(movimento_p[0])
+                    for i in range(coluna_referencia.index(movimento_p[1]) + 1, coluna_referencia.index(posi_atual_p[1])):
+                        if tabuleiro_cores[v][i] != ESPACO:
+                            cont += 1
+                        v += 1
+                    if cont == 0:
+                        if coluna_referencia.index(posi_atual_p[1]) - x == coluna_referencia.index(movimento_p[1]):
+                            tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                            if turno == BRANCAS:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                            else:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+
+                elif coluna_referencia.index(posi_atual_p[1]) < coluna_referencia.index(movimento_p[1]):
+                    x = (int(posi_atual_p[0]) - 1) - (int(movimento_p[0]) - 1)
+                    v = int(movimento_p[0])
+                    for i in range(coluna_referencia.index(movimento_p[1]) - 1, coluna_referencia.index(posi_atual_p[1]),
+                                   -1):
+                        if tabuleiro_cores[v][i] != ESPACO:
+                            cont += 1
+                        v += 1
+                    if cont == 0:
+                        if coluna_referencia.index(posi_atual_p[1]) + x == coluna_referencia.index(movimento_p[1]):
+                            tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                            if turno == BRANCAS:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                            else:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+
+            elif int(posi_atual_p[0]) - 1 < int(movimento_p[0]) - 1:
+                if coluna_referencia.index(posi_atual_p[1]) > coluna_referencia.index(movimento_p[1]):
+                    x = (int(movimento_p[0]) - 1) - (int(posi_atual_p[0]) - 1)
+                    v = int(posi_atual_p[0])
+                    for i in range(coluna_referencia.index(posi_atual_p[1]) - 1, coluna_referencia.index(movimento_p[1]),
+                                   -1):
+                        if tabuleiro_cores[v][i] != ESPACO:
+                            cont += 1
+                        v += 1
+                    if cont == 0:
+                        if coluna_referencia.index(posi_atual_p[1]) - x == coluna_referencia.index(movimento_p[1]):
+                            tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                            if turno == BRANCAS:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                            else:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+
+                elif coluna_referencia.index(posi_atual_p[1]) < coluna_referencia.index(movimento_p[1]):
+                    x = (int(movimento_p[0]) - 1) - (int(posi_atual_p[0]) - 1)
+                    v = int(posi_atual_p[0])
+                    for i in range(coluna_referencia.index(posi_atual_p[1]) + 1, coluna_referencia.index(movimento_p[1])):
+                        if tabuleiro_cores[v][i] != ESPACO:
+                            cont += 1
+                        v += 1
+                    if cont == 0:
+                        if coluna_referencia.index(posi_atual_p[1]) + x == coluna_referencia.index(movimento_p[1]):
+                            tabuleiro[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(posi_atual_p[0]) - 1][coluna_referencia.index(posi_atual_p[1])] = ESPACO
+                            tabuleiro_cores[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = turno
+
+                            if turno == BRANCAS:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_B
+                            else:
+                                tabuleiro[int(movimento_p[0]) - 1][coluna_referencia.index(movimento_p[1])] = RAINHA_P
+
 
 posi_atual_p: str
 movimento_p: str
@@ -328,4 +515,3 @@ while True:
     else:
         print(0)
     trocar_turno()
-    
