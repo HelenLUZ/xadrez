@@ -307,7 +307,7 @@ def mover_bispo():
             elif coluna_referencia.index(posi_atual_p[1]) < coluna_referencia.index(movimento_p[1]):
                 x = (int(posi_atual_p[0]) - 1) - (int(movimento_p[0]) - 1)
                 v = int(movimento_p[0])
-                for i in range(coluna_referencia.index(movimento_p[1])-1,coluna_referencia.index(posi_atual_p[1]), -1 ):
+                for i in range(coluna_referencia.index(movimento_p[1])-1,coluna_referencia.index(posi_atual_p[1])+1, -1 ):
                     if tabuleiro_cores[v][i]!=ESPACO:
                         cont += 1
                     v += 1
